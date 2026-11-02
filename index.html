@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dashboard หน่วยปฐมพยาบาล จ.กาญจนบุรี</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f1f6ff;--card:#fff;--tx:#14213d;--mut:#5b6b8c;--bd:#dbe5f7;--c1:#0ea5e9;--c2:#10b981;--c3:#f59e0b;--c4:#ec4899;--c5:#8b5cf6;--c6:#ef4444;--hd1:#0ea5e9;--hd2:#8b5cf6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1226;--card:#141d38;--tx:#eaf0ff;--mut:#9fb0d6;--bd:#243157;--hd1:#0369a1;--hd2:#6d28d9}}
+:root[data-theme="dark"]{--bg:#0b1226;--card:#141d38;--tx:#eaf0ff;--mut:#9fb0d6;--bd:#243157;--hd1:#0369a1;--hd2:#6d28d9}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Noto Sans Thai",system-ui,sans-serif;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:14px}
+header{background:linear-gradient(120deg,var(--hd1),var(--hd2));color:#fff;border-radius:18px;padding:18px 20px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+h1{margin:0;font-size:1.35rem;font-weight:800}header p{margin:2px 0 0;opacity:.9;font-size:.85rem}
+.live{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);padding:6px 12px;border-radius:99px;font-size:.82rem}
+.dot{width:10px;height:10px;border-radius:50%;background:#4ade80;animation:p 1.4s infinite}
+@keyframes p{0%{box-shadow:0 0 0 0 #4ade80aa}100%{box-shadow:0 0 0 10px #4ade8000}}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.k{border-radius:16px;padding:14px;color:#fff;position:relative;overflow:hidden}
+.k b{display:block;font-size:2rem;line-height:1.1;font-weight:800}.k span{font-size:.8rem;opacity:.95}
+.k i{position:absolute;right:10px;top:6px;font-style:normal;font-size:1.6rem;opacity:.35}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px}
+.card h2{margin:0 0 10px;font-size:1rem;font-weight:700}
+.row{display:grid;grid-template-columns:110px 1fr 34px;gap:8px;align-items:center;margin:7px 0;font-size:.85rem}
+.bar{height:14px;border-radius:99px;background:var(--bd);overflow:hidden}.bar u{display:block;height:100%;border-radius:99px;transition:width .6s}
+.row em{font-style:normal;font-weight:700;text-align:right}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:640px;font-size:.84rem}
+th{background:linear-gradient(90deg,var(--c1),var(--c5));color:#fff;text-align:left;padding:8px;font-weight:600}
+td{padding:8px;border-bottom:1px solid var(--bd);vertical-align:top}
+.chip{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.75rem;font-weight:600;color:#fff;background:var(--c2)}
+.chip.w{background:var(--c3)}.chip.r{background:var(--c6)}
+.case,.prob{border-left:5px solid var(--c4);background:color-mix(in srgb,var(--c4) 8%,var(--card));padding:10px 12px;border-radius:10px;margin:8px 0;font-size:.85rem;white-space:pre-line}
+.prob{border-color:var(--c3);background:color-mix(in srgb,var(--c3) 10%,var(--card))}
+.mut{color:var(--mut);font-size:.8rem}
+textarea{width:100%;min-height:90px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);padding:8px;font-family:inherit}
+button{border:0;border-radius:10px;padding:8px 14px;color:#fff;font-weight:600;font-family:inherit;cursor:pointer;background:linear-gradient(90deg,var(--c1),var(--c5));margin:6px 6px 0 0}
+button.g{background:var(--mut)}
+details{margin-top:12px}summary{cursor:pointer;font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div><h1>🚑 Dashboard หน่วยปฐมพยาบาล จังหวัดกาญจนบุรี</h1><p>สำนักงานสาธารณสุขจังหวัดกาญจนบุรี · ฐานข้อมูลหน่วยปฐมพยาบาล</p></div>
+ <div class="live"><span class="dot"></span><span id="clock"></span></div>
+</header>
+<div class="kpis" id="kpis"></div>
+<div class="grid">
+ <div class="card"><h2>👥 บุคลากรปฏิบัติงานแยกประเภท</h2><div id="staff"></div></div>
+ <div class="card"><h2>🩺 อาการที่พบ (ผู้ป่วย)</h2><div id="sym"></div></div>
+ <div class="card"><h2>🩹 การปฐมพยาบาล / การดูแล</h2><div id="fa"></div></div>
+</div>
+<div class="grid" style="margin-top:12px">
+ <div class="card"><h2>📌 ข้อมูลเคสสำคัญ / Refer</h2><div id="cases"></div></div>
+ <div class="card"><h2>⚠️ ปัญหา / อุปสรรคที่พบ</h2><div id="probs"></div></div>
+</div>
+<div class="card" style="margin-top:12px"><h2>📋 รายการกิจกรรมทั้งหมด</h2><div class="scroll"><table><thead><tr><th>วันที่/เวลา</th><th>กิจกรรม</th><th>สถานที่</th><th>บุคลากร</th><th>ผู้ป่วย</th><th>สถานะ</th><th>ผู้ลงข้อมูล</th></tr></thead><tbody id="tb"></tbody></table></div></div>
+<details class="card"><summary>🔄 อัปเดตข้อมูลจาก Google Sheets</summary>
+ <p class="mut">เปิดชีต → เลือกแถวข้อมูล (คอลัมน์ A–Q) → คัดลอก (Ctrl+C) → วางด้านล่าง → กด “นำเข้าข้อมูล” ข้อมูลจะบันทึกในเบราว์เซอร์ของท่านและคำนวณใหม่ทันที (หน้านี้ดึงชีตอัตโนมัติไม่ได้ ตามข้อจำกัดความปลอดภัยของระบบโฮสต์)</p>
+ <textarea id="paste" placeholder="วางข้อมูลที่คัดลอกจากชีตที่นี่"></textarea>
+ <button id="imp">นำเข้าข้อมูล</button><button class="g" id="rst">กลับค่าเริ่มต้น</button><span class="mut" id="msg"></span>
+</details>
+<p class="mut" id="foot"></p>
+</div>
+<script>
+var SEED=[
+{d:"29 ต.ค. 69 / 09.00 น",act:"การขอรับทุนการศึกษา มูลนิธิคุณพุ่ม ปีการศึกษา 2569 จำนวน 130 ทุน ให้กับศูนย์การศึกษาพิเศษ ประจำจังหวัดกาญจนบุรี",loc:"ศูนย์การศึกษาพิเศษ ประจำจังหวัดกาญจนบุรี ต.บ้านเหนือ อ.เมืองฯ",doc:0,nur:2,asst:0,fnd:0,drv:1,st:"ดำเนินงานแล้ว",pt:0,sym:"ไม่มีผู้รับบริการ",fa:"ไม่มีผู้รับบริการ",prob:"หนังสือส่งกระชั้นชิด",note:"",who:"สุพิชชา",pos:"พยาบาลวิชาชีพ",org:"สสจ"},
+{d:"1 พ.ย. 69 / 05.00 น",act:"เดิน วิ่ง ปั่น ป้องกันอัมพาต ครั้งที่ 12",loc:"จุด start-finish (ศาลากลางจังหวัดกาญจนบุรี) / หน้าแมคโดนัล (แยกชุกโดน) / บริเวณสกายวอร์ค เมืองกาญจน์ฯ / ยูเทิร์นตลาดเจเจ ปิดท้ายขบวน และตามระยะทาง",doc:3,nur:8,asst:0,fnd:10,drv:4,st:"ดำเนินงานแล้ว",pt:2,sym:"ตะคริว 1 และ อื่นๆ 1",fa:"นั่งพัก 1 และ Refer 1 เคส",prob:"",note:"ญ ไทย 43 ปี\n>> ชาปลายมือปลายเท้า 2 ข้างหลังวิ่ง นำส่ง รพ.พหลฯ\n>> แพทย์ dx. syncope ผลเลือด v/s EKG ปกติหมด\n- ให้ iv + นอนพักสังเกตอาการ ตอนนี้กลับบ้านแล้ว",who:"สุพิชชา",pos:"พยาบาลวิชาชีพ",org:"สสจ"}
+];
+var KEY="kan-firstaid-v1",D=SEED,asof="ข้อมูล ณ 2 พ.ย. 2569 (ชีตมี 2 รายการ)";
+try{var s=localStorage.getItem(KEY);if(s){var o=JSON.parse(s);if(o&&o.rows&&o.rows.length){D=o.rows;asof="นำเข้าข้อมูลล่าสุด "+o.at+" ("+D.length+" รายการ)"}}}catch(e){}
+function esc(t){return String(t==null?"":t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function n(v){v=parseInt(v,10);return isNaN(v)?0:v}
+function cnt(str,m){if(!str||/ไม่มี/.test(str))return;String(str).split(/และ|,|\n/).forEach(function(p){var r=p.trim().match(/^(.+?)\s*(\d+)\s*\S*$/);if(r){var k=r[1].trim();m[k]=(m[k]||0)+n(r[2])}})}
+function bars(id,items,cols){var el=document.getElementById(id);if(!items.length){el.innerHTML='<p class="mut">ไม่มีข้อมูล</p>';return}
+ var mx=Math.max.apply(null,items.map(function(i){return i[1]}))||1;
+ el.innerHTML=items.map(function(i,x){return '<div class="row"><span>'+esc(i[0])+'</span><div class="bar"><u style="width:'+Math.round(i[1]/mx*100)+'%;background:'+cols[x%cols.length]+'"></u></div><em>'+i[1]+'</em></div>'}).join("")}
+function render(){
+ var t={doc:0,nur:0,asst:0,fnd:0,drv:0,pt:0},sy={},fa={},done=0,ref=0;
+ D.forEach(function(r){["doc","nur","asst","fnd","drv","pt"].forEach(function(k){t[k]+=n(r[k])});cnt(r.sym,sy);cnt(r.fa,fa);if(/ดำเนินงานแล้ว/.test(r.st))done++});
+ Object.keys(fa).forEach(function(k){if(/refer/i.test(k))ref+=fa[k]});
+ var staff=t.doc+t.nur+t.asst+t.fnd+t.drv,pr=D.filter(function(r){return r.prob&&r.prob.trim()}).length;
+ var K=[["🗓️","กิจกรรมทั้งหมด",D.length,"#0ea5e9"],["✅","ดำเนินงานแล้ว",done,"#10b981"],["👥","บุคลากรรวม (คน)",staff,"#8b5cf6"],["🧑‍⚕️","ผู้ป่วยที่รับบริการ",t.pt,"#ec4899"],["🚑","Refer (เคส)",ref,"#ef4444"],["📈","อัตรา Refer",t.pt?Math.round(ref/t.pt*100)+"%":"–","#f59e0b"],["⚠️","กิจกรรมที่มีปัญหา",pr,"#14b8a6"]];
+ document.getElementById("kpis").innerHTML=K.map(function(k){return '<div class="k" style="background:linear-gradient(135deg,'+k[3]+','+k[3]+'bb)"><i>'+k[0]+'</i><b>'+k[2]+'</b><span>'+k[1]+'</span></div>'}).join("");
+ var C=["#0ea5e9","#10b981","#f59e0b","#ec4899","#8b5cf6","#ef4444"];
+ bars("staff",[["แพทย์",t.doc],["พยาบาล",t.nur],["ผู้ช่วยเหลือคนไข้",t.asst],["จนท.มูลนิธิ",t.fnd],["พนักงานขับรถ",t.drv]],C);
+ bars("sym",Object.keys(sy).map(function(k){return[k,sy[k]]}),C.slice(2));
+ bars("fa",Object.keys(fa).map(function(k){return[k,fa[k]]}),C.slice(1));
+ var cs=D.filter(function(r){return r.note&&r.note.trim()});
+ document.getElementById("cases").innerHTML=cs.length?cs.map(function(r){return '<div class="case"><b>'+esc(r.d)+'</b>\n'+esc(r.note)+'</div>'}).join(""):'<p class="mut">ไม่มีข้อมูลเคส</p>';
+ var ps=D.filter(function(r){return r.prob&&r.prob.trim()});
+ document.getElementById("probs").innerHTML=ps.length?ps.map(function(r){return '<div class="prob"><b>'+esc(r.d)+'</b>\n'+esc(r.prob)+'</div>'}).join(""):'<p class="mut">ไม่มีปัญหา/อุปสรรคที่รายงาน</p>';
+ document.getElementById("tb").innerHTML=D.map(function(r){var s=n(r.doc)+n(r.nur)+n(r.asst)+n(r.fnd)+n(r.drv),c=/ดำเนินงานแล้ว/.test(r.st)?"":/ไม่/.test(r.st)?" r":" w";
+  return '<tr><td>'+esc(r.d)+'</td><td>'+esc(r.act)+'</td><td>'+esc(r.loc)+'</td><td>'+s+' คน<br><span class="mut">พ '+n(r.doc)+' · พย '+n(r.nur)+' · ผู้ช่วย '+n(r.asst)+' · มูลนิธิ '+n(r.fnd)+' · พขร '+n(r.drv)+'</span></td><td>'+n(r.pt)+'</td><td><span class="chip'+c+'">'+esc(r.st||"–")+'</span></td><td>'+esc(r.who)+'<br><span class="mut">'+esc(r.pos)+' '+esc(r.org)+'</span></td></tr>'}).join("");
+ document.getElementById("foot").textContent=asof+" · อัตรา Refer = Refer ÷ ผู้ป่วยที่รับบริการ"}
+function tsv(s){var rows=[],row=[],f="",q=false;for(var i=0;i<s.length;i++){var c=s[i];if(q){if(c=='"'){if(s[i+1]=='"'){f+='"';i++}else q=false}else f+=c}else if(c=='"')q=true;else if(c=="\t"){row.push(f);f=""}else if(c=="\n"){row.push(f);rows.push(row);row=[];f=""}else if(c!="\r")f+=c}row.push(f);rows.push(row);return rows}
+document.getElementById("imp").onclick=function(){var rs=tsv(document.getElementById("paste").value).filter(function(r){return /^\s*\d+\s/.test(r[0]||"")}).map(function(r){return{d:r[0],act:r[1],loc:r[2],doc:n(r[3]),nur:n(r[4]),asst:n(r[5]),fnd:n(r[6]),drv:n(r[7]),st:r[8],pt:n(r[9]),sym:r[10],fa:r[11],prob:r[12],note:r[13],who:r[14],pos:r[15],org:r[16]}});
+ var m=document.getElementById("msg");if(!rs.length){m.textContent=" ไม่พบแถวข้อมูล (ต้องขึ้นต้นด้วยวันที่)";return}
+ D=rs;var at=new Date().toLocaleString("th-TH");asof="นำเข้าข้อมูลล่าสุด "+at+" ("+rs.length+" รายการ)";
+ try{localStorage.setItem(KEY,JSON.stringify({rows:rs,at:at}))}catch(e){}m.textContent=" นำเข้า "+rs.length+" รายการแล้ว";render()};
+document.getElementById("rst").onclick=function(){try{localStorage.removeItem(KEY)}catch(e){}D=SEED;asof="ข้อมูล ณ 2 พ.ย. 2569 (ชีตมี 2 รายการ)";document.getElementById("msg").textContent=" กลับค่าเริ่มต้นแล้ว";render()};
+function tick(){document.getElementById("clock").textContent="LIVE · "+new Date().toLocaleString("th-TH")}
+tick();setInterval(tick,1000);render();
+</script>
+</body>
+</html>
